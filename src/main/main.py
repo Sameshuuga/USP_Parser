@@ -34,7 +34,7 @@ def print_sections(sections: dict[str, list[str]]) -> None:
 
 
 if __name__ == "__main__":
-    monograph = "USP-NF Amoxicillin and Clavulanate Potassium Tablets"
+    monograph = "USP-NF Ketamine Hydrochloride"
     document = data_dir / f"input/pdfs/{monograph}.pdf"
     output = data_dir / f"output/{monograph}"
     text = upar.pdf_to_text(document)
