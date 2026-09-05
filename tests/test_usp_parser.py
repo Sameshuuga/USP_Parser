@@ -7,7 +7,7 @@ class TestBreakIntoSections:
     def test_single_section(self):
         text = "DEFINITION\nSome definition text.\nMore text."
         result = upar.break_into_sections(text)
-        assert result == {"DEFINITION": ["Some definition text.", "More text."]}
+        assert result == {"DEFINITION": "Some definition text.\nMore text."}
 
     def test_multiple_sections(self):
         text = (
@@ -21,9 +21,9 @@ class TestBreakIntoSections:
         )
         result = upar.break_into_sections(text)
         assert result == {
-            "DEFINITION": ["Def line 1."],
-            "ASSAY": ["Assay line 1.", "Assay line 2."],
-            "IMPURITIES": ["Impurities line 1."],
+            "DEFINITION": "Def line 1.",
+            "ASSAY": "Assay line 1.\nAssay line 2.",
+            "IMPURITIES": "Impurities line 1.",
         }
 
     def test_all_known_headers(self):
@@ -40,14 +40,14 @@ class TestBreakIntoSections:
         result = upar.break_into_sections(text)
         assert set(result.keys()) == set(headers)
         for h in headers:
-            assert result[h] == [f"body for {h}"]
+            assert result[h] == f"body for {h}"
 
     def test_section_with_no_body_lines(self):
         text = "DEFINITION\nASSAY\nAssay text."
         result = upar.break_into_sections(text)
         assert result == {
-            "DEFINITION": [],
-            "ASSAY": ["Assay text."],
+            "DEFINITION": "",
+            "ASSAY": "Assay text.",
         }
 
     def test_no_headers_raises(self):
@@ -65,4 +65,4 @@ class TestBreakIntoSections:
         # in the result. This test documents that behavior.
         text = "ASSAY\nfirst body\nASSAY\nsecond body"
         result = upar.break_into_sections(text)
-        assert result == {"ASSAY": ["second body"]}
+        assert result == {"ASSAY": "second body"}

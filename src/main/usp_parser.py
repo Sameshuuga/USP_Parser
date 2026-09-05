@@ -1,4 +1,5 @@
 from pypdf import PdfReader
+from pathlib import Path
 import re
 
 
@@ -15,7 +16,7 @@ def pdf_to_text(pdf_path: str) -> str:
 
 ##-----------------------------------------------------------------------##
 ## ------------------------ break_into_sections ------------------------ ##
-def break_into_sections(text: str) -> dict[str, list[str]]:
+def break_into_sections(text: str) -> dict[str, str]:
     headers = [
         "DEFINITION",
         "IDENTIFICATION",
@@ -42,30 +43,13 @@ def break_into_sections(text: str) -> dict[str, list[str]]:
     for section in sections:
         if not section:
             continue
-        key, rest = section[0], section[1:]
+        key, rest = section[0], "\n".join(section[1:])
         result[key] = rest
     return result
 
 
 ##-----------------------------------------------------------------------##
-## ------------------------ parse Assay -------------------------------- ##
-def extract_assay_preps(section: list[str]) -> list[str]:
-
-    return preps
-
-
-##-----------------------------------------------------------------------##
-
-
-def extract_preps(sections: list[list[str]]) -> dict:
-    pass
-
-
-def usp_parser(monograph_paths: list[str]):
-    processed_monographs = []
-
-    for monograph in monograph_paths:
-        processed_monograph = pdf_to_text(monograph)
-        processed_monographs.append(processed_monograph)
-
-    return processed_monographs
+def usp_parser(monograph: Path) -> dict:
+    text = pdf_to_text(monograph)
+    result = break_into_sections(text)
+    return result
