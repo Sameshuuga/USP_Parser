@@ -1,24 +1,40 @@
-import os
+#!/usr/bin/env /home/sameshuuga/Projects/USP_Parser/.venv/bin/python3
+
+import os, sys
 from pathlib import Path
 
 import settings
 import usp_parser as upar
 import llm_handler as llm
+import ui
 
-root_dir = settings.root_dir
-data_dir = root_dir / "data/"
-monograph = "USP-NF Ketamine Hydrochloride"
-document = data_dir / f"input/pdfs/{monograph}.pdf"
+
+import logging
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(filename=settings.log_file, level=logging.INFO)
 LLM = llm.BaseLLM()
 
 
-def generate_steps(monograph_pdf_Path, test: str):
-    monograph: dict = upar.usp_parser(monograph_pdf_Path)
+def print_steps(steps: dict):
+    for key, step in steps.items():
+        print(f"\n{key}:\n{step}")
+
+
+def generate_steps(monograph: dict, test: str):
     raw_llm_output = LLM.call_llm(monograph.get(test))
     instructions = raw_llm_output.solutions_dict
-    print(instructions)
-    pass
+    print_steps(instructions)
+    return instructions
+
+
+def main():
+    while True:
+        args = ui.build_parser().parse_args()
+        monograph: dict = upar.usp_parser(ui.file_menu(args.input))
+        test = ui.section_menu(monograph)
+        generate_steps(monograph, test)
 
 
 if __name__ == "__main__":
-    generate_steps(document, "ASSAY")
+    sys.exit(main())
