@@ -4,15 +4,31 @@ import re, logging
 
 logger = logging.getLogger(__name__)
 
+_ORPHAN_LINE = re.compile(r"^[A-Za-z0-9]{1,2}(?:\s+[A-Za-z0-9]{1,2})*$")
+
 
 ## ------------------------ pdf_to_text -------------------------------- ##
+def is_noise_line(line: str) -> bool:
+    """True if a line is nothing but short (1-2 char) whitespace-separated
+    tokens — the pattern typical of PDF-extraction artifacts."""
+    return bool(_ORPHAN_LINE.match(line.strip()))
+
+
+def clean(text: str) -> str:
+    """Strip lines that look like PDF-extraction noise, keep the rest."""
+    kept = [
+        line for line in text.splitlines() if line.strip() and not is_noise_line(line)
+    ]
+    return "\n".join(kept)
+
+
 def pdf_to_text(pdf: Path) -> str:
     reader = PdfReader(pdf)
     text = ""
     for page in reader.pages:
-        extracted = page.extract_text()
+        extracted = clean(page.extract_text())
         if extracted:
-            text += extracted + "\n"
+            text += extracted
     return text
 
 
@@ -54,7 +70,7 @@ def break_into_sections(text: str) -> dict[str, str]:
 ##-----------------------------------------------------------------------##
 def usp_parser(monograph: Path) -> dict:
     logger.info("Parsing %s.", monograph.name)
-    text = pdf_to_text(monograph)
+    text = clean(pdf_to_text(monograph))
     result = break_into_sections(text)
     logger.info("Parsed %s.", monograph.name)
     return result

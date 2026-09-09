@@ -1,7 +1,9 @@
-import json
+import json, logging
 from pydantic import BaseModel, Field, field_validator
 from openai import OpenAI
 from settings import LLM_API_KEY, DEFAULT_LLM, root_dir
+
+logger = logging.getLogger(__name__)
 
 
 class LLMInput(BaseModel):
@@ -46,8 +48,7 @@ class LLMOutput(BaseModel):
 
 class BaseLLM:
     """pydantic schema input ---> LLM ---> pydantic schema output
-    Provide: API key, llm_model
-    Useage: calling OpenAI LLM models"""
+    Provide: API key, llm_model"""
 
     def __init__(self, api_key=LLM_API_KEY, llm_model=DEFAULT_LLM):
         self.client = OpenAI(api_key=api_key)

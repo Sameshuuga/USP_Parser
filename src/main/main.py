@@ -1,19 +1,15 @@
 #!/usr/bin/env /home/sameshuuga/Projects/USP_Parser/.venv/bin/python3
 
-import os, sys
+import sys, logging
 from pathlib import Path
 
-import settings
+import settings, ui
 import usp_parser as upar
 import llm_handler as llm
-import ui
-
-
-import logging
+import excel_writer as ew
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(filename=settings.log_file, level=logging.INFO)
-LLM = llm.BaseLLM()
 
 
 def print_steps(steps: dict):
@@ -22,7 +18,7 @@ def print_steps(steps: dict):
 
 
 def generate_steps(monograph: dict, test: str):
-    raw_llm_output = LLM.call_llm(monograph.get(test))
+    raw_llm_output = llm.BaseLLM().call_llm(monograph.get(test))
     instructions = raw_llm_output.solutions_dict
     print_steps(instructions)
     return instructions
@@ -37,4 +33,9 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    # sys.exit(main())
+    pdf = (
+        settings.root_dir
+        / "data/input/USP-NF Amoxicillin and Clavulanate Potassium Tablets.pdf"
+    )
+    print_steps(upar.break_into_sections(upar.pdf_to_text(pdf)))
