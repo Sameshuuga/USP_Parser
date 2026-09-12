@@ -9,7 +9,7 @@ data_dir = root_dir / "data/"
 log_file = data_dir / "main.log"
 default_input_dir = data_dir / "input"
 default_output_dir = data_dir / "output"
-
+templet_file = default_output_dir / "excel_templet.xlsx"
 
 LLM_API_KEY = os.getenv("OPEN_AI")
 DEFAULT_LLM = "gpt-4.1-nano"

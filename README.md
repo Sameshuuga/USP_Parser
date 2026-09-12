@@ -7,6 +7,8 @@ is of {SECTION: body text} form where SECTION is one of "DEFINITION", "IDENTIFIC
 The resulting dict object is used to target sections for further refinement or for feeding the body text through a LLM to generate a step by step list
 with instructions for completing the testing, i.e. solution preps. This list will be used to populate the excel compatible file.
 
+A small flask app is used as the interface to allow for drag and drop file selection. After connecting to the flask app through the browser, the pdf can be
+drag and dropped. After processing is complete the .xlsx file is downloaded by the client. 
 
 
 

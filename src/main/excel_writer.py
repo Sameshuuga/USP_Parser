@@ -8,7 +8,7 @@ from openpyxl.utils.cell import (
     get_column_letter,
 )
 
-from settings import default_output_dir as dod
+from main.settings import default_output_dir as dod
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +50,7 @@ def generate_cell_refs(payload: list, start_cell: str = "A1") -> list:
 
 def inject_xlsx(
     target_file: Path, payload: list, start_cell: str = "A1", sheet_name: str = None
-):
+) -> Path:
     """
     Write values into an existing xlsx file starting from start_cell.
 

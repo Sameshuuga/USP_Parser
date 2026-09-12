@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import argparse, sys, os, logging
-from settings import default_input_dir
+from main.settings import default_input_dir
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +17,7 @@ class Menu:
         self.header = header
         self.options = options
 
-    def prompt(self):
+    def prompt(self) -> object:
         while True:
             print(f"\n=== {self.header} ===")
             for i, (label, _value) in enumerate(self.options, start=1):
@@ -41,7 +41,7 @@ class Menu:
                 print("Invalid choice, try again.")
 
 
-def make_menu(header: str, items: list, label_fn=str):
+def make_menu(header: str, items: list, label_fn=str) -> Menu:
     """Convenience wrapper: build a Menu from a plain list of items."""
     options = [(label_fn(item), item) for item in items]
     return Menu(header, options)

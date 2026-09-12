@@ -1,7 +1,7 @@
 import json, logging
 from pydantic import BaseModel, Field, field_validator
 from openai import OpenAI
-from settings import LLM_API_KEY, DEFAULT_LLM, root_dir
+from main.settings import LLM_API_KEY, DEFAULT_LLM, root_dir
 
 logger = logging.getLogger(__name__)
 
