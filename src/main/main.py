@@ -59,8 +59,3 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
-    # pdf = (
-    # settings.root_dir
-    # / "data/input/USP-NF Amoxicillin and Clavulanate Potassium Tablets.pdf"
-    # )
-    # print_steps(upar.break_into_sections(upar.pdf_to_text(pdf)))

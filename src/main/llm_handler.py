@@ -53,30 +53,18 @@ class BaseLLM:
     def __init__(self, api_key=LLM_API_KEY, llm_model=DEFAULT_LLM):
         self.client = OpenAI(api_key=api_key)
 
-    def call_llm(self, prompt: str, output: LLMOutput = LLMOutput):
+    def call_llm(
+        self, prompt: str, output: type[LLMOutput] = LLMOutput
+    ) -> LLMOutput | None:
         user_input = LLMInput(prompt=prompt)
         response = self.client.responses.parse(
             **user_input.model_dump(exclude={"prompt"}),
             input=[{"role": "user", "content": user_input.prompt}],
             text_format=output,
         )
-        parsed: LLMOutput = response.output_parsed
+        parsed: LLMOutput | None = response.output_parsed
         return parsed
 
 
 if __name__ == "__main__":
-    llm = BaseLLM()
-    output_file = root_dir / "data/output/llm.json"
-
-    with open(root_dir / "data/output/ASSAY.txt", "r") as f:
-        prompt = f.read()
-
-    user_input = LLMInput(
-        prompt=prompt,
-        instructions="parse the solution preps from the provided USP Assay test. For each solution return a python dict entry of form {Solution_name: List of steps}. Do not keep the steps minmal.",
-    )
-
-    response = llm.call_llm(user_input)
-    with open(f"{output_file}", "w") as f:
-        json.dump(response.model_dump(), f, indent=2, default=str)
-    print(response)
+    pass
